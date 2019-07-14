@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zg.zgshop.dao.AccountDao">
+
+    <resultMap id="resultMap" type="com.zg.zgshop.pojo.AccountItem">
+        <result property="product_id" column="tp.id"/>
+        <result property="date" column="create_date" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+        <result property="num" column="num"/>
+        <result property="image" column="image"/>
+        <result property="name" column="name"/>
+        <result property="price" column="tp.price"/>
+    </resultMap>
+
+
+    <select id="selectAll" resultMap="resultMap">
+        SELECT tp.id as 'tp.id', tp.image, tp.name, tp.price as 'tp.price', t.create_date, sc.num
+        FROM t_order as t
+                 LEFT JOIN shopping_cart as sc
+                           ON t.id = sc.order_id
+                 LEFT JOIN t_product as tp
+                           on sc.product_id = tp.id
+    </select>
+</mapper>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zg.zgshop.dao.ProductDao">
+
+    <sql id="productColumn">
+        id,
+        name,
+        price,
+        info,
+        image,
+        sale_status,
+        product_type_id
+    </sql>
+
+    <resultMap id="productMap" type="Product">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="price" column="price"/>
+        <result property="info" column="info"/>
+        <result property="image" column="image"/>
+        <result property="sale_status" column="sale_status"/>
+        <association property="productType" javaType="ProductType" column="id">
+            <id property="id" column="pt.id"/>
+            <result property="name" column="pt.name"/>
+            <result property="status" column="status"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="productMap1" type="Product">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="price" column="price"/>
+        <result property="info" column="info"/>
+        <result property="image" column="image"/>
+        <result property="sale_status" column="sale_status"/>
+        <association property="productType" javaType="ProductType" column="product_type_id">
+            <id property="id" column="product_type_id"/>
+        </association>
+    </resultMap>
+
+
+    <insert id="insert" parameterType="Product">
+        insert into t_product
+            (name, price, info, image, sale_status, product_type_id)
+        values (#{name}, #{price}, #{info}, #{image}, #{sale_status}, #{productType.id})
+    </insert>
+
+    <select id="selectByName" resultMap="productMap">
+        select
+        <include refid="productColumn"/>
+        from t_product
+        where name=#{name}
+    </select>
+
+    <select id="selectAll" resultMap="productMap">
+        select p.id,
+               p.name,
+               p.price,
+               p.info,
+               p.image,
+               p.sale_status,
+               pt.id   as 'pt.id',
+               pt.name as 'pt.name',
+               pt.status
+        from t_product as p
+                 left join t_product_type as pt
+                           on p.product_type_id = pt.id
+    </select>
+
+    <select id="selectById" resultMap="productMap1">
+        select
+        <include refid="productColumn"/>
+        from t_product
+        where id = #{id}
+    </select>
+
+    <select id="selectBySaleStatus" resultType="Product">
+        select
+        <include refid="productColumn"/>
+        from t_product
+        where sale_status=#{unSaleStatus}
+    </select>
+
+    <update id="update" parameterType="Product">
+        update t_product
+        set
+            <if test="name != null">name=#{name},</if>
+            <if test="price != null">price=#{price},</if>
+            <if test="info != null">info=#{info},</if>
+            <if test="image != null">image=#{image},</if>
+            <if test="productType.id != null">product_type_id=#{productType.id},</if>
+            <if test="sale_status != null">sale_status=#{sale_status}</if>
+        where id = #{id}
+    </update>
+
+    <update id="updateSaleStatus">
+        update t_product
+        set
+            sale_status = #{saleStatus}
+        where id = #{productId}
+    </update>
+
+    <delete id="removeById">
+        delete
+        from t_product
+        where id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,23 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="zgshop_backend_web:war exploded">
+    <output-path>$PROJECT_DIR$/zgshop_parent/zgshop_backend_web/target/zgshop_backend_web</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <exploded>true</exploded>
+        <module>zgshop_backend_web</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="zgshop_backend_web" />
+        </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/zgshop_parent/zgshop_backend_web/target/zgshop_backend_web/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="zgshop_backend_web/web/Web" />
+    </root>
+  </artifact>
+</component>

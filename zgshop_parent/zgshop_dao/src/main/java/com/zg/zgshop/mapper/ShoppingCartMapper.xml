@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zg.zgshop.dao.ShoppingCartDao">
+
+    <sql id="shoppingCartColumn">
+        id,
+        product_id,
+        num,
+        price,
+        order_id
+    </sql>
+
+    <!--<resultMap id="resultMap" type="ShoppingCart">-->
+        <!--<id column="id" property="id" javaType="int"/>-->
+        <!--<result column="num" property="num" javaType="int"/>-->
+        <!--<result column="order_id" property="orderId" javaType="int"/>-->
+        <!--<association property="product" javaType="Product">-->
+            <!--<id property="id" column="product_id"/>-->
+            <!--<result property="price" column="price"/>-->
+        <!--</association>-->
+    <!--</resultMap>-->
+
+    <resultMap id="resultMap" type="ShoppingCart">
+        <result column="product_id" property="productId" javaType="int"/>
+        <result column="order_id" property="orderId" javaType="int"/>
+    </resultMap>
+
+
+    <select id="selectByProductId" resultMap="resultMap">
+        select
+        <include refid="shoppingCartColumn"/>
+        from shopping_cart
+        where product_id=#{productId}
+    </select>
+
+    <select id="selectNumByProductId" resultType="java.lang.Integer">
+        select
+        num
+        from shopping_cart
+        where product_id=#{productId}
+    </select>
+
+    <select id="selectSaleNumById" resultType="java.lang.Integer">
+        select
+            num
+        from shopping_cart
+        where product_id=#{productId}
+        and order_id > 0
+    </select>
+
+    <select id="selectAll" resultMap="resultMap">
+        select
+        <include refid="shoppingCartColumn"/>
+        from shopping_cart
+    </select>
+
+    <select id="selectByOrderId" resultMap="resultMap">
+        select
+        <include refid="shoppingCartColumn"/>
+        from shopping_cart
+        where order_id=#{id}
+    </select>
+
+    <select id="selectUnPay" resultMap="resultMap">
+        select
+        <include refid="shoppingCartColumn"/>
+        from shopping_cart
+        where order_id=#{unpayOrderid}
+    </select>
+
+    <update id="update">
+        update shopping_cart
+        set num=#{num}
+        where product_id=#{productId}
+    </update>
+
+    <update id="updateOrderIdByShoppingCartId">
+        update shopping_cart
+        set order_id=#{orderId}
+        where id=#{shoppingCartId}
+    </update>
+
+    <insert id="insert">
+        insert into shopping_cart
+            (product_id, num, price, order_id)
+        values (#{id}, #{num}, #{price}, 0)
+    </insert>
+</mapper>
